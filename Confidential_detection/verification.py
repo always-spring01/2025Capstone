@@ -3,6 +3,7 @@
 '''
 from sentence_transformers import util
 from vectorization import Vectorization
+from convert import Converter
 import pickle
 
 class Verification():
@@ -10,6 +11,7 @@ class Verification():
         self.convertdir = "./convert/"
         self.vectorizationdir = "./vectorization/"
         self.vectorization = Vectorization("sbert", "all-MiniLM-L6-v2")
+        self.vectorization.process(filename)
         self.threshold = threshold
         with open(f"{self.convertdir}{filename}.pkl", 'rb') as f:
             self.sentences = pickle.load(f)
@@ -33,7 +35,9 @@ class Verification():
 
 # Debug
 if __name__ == '__main__':
-    verification = Verification("file1", 0.75)
+    converter = Converter()
+    converter.convert("file2.txt")
+    verification = Verification("file2", 0.5)
     while True:
         query = input("[verification.py] input : ")
         if (query == "exit"): break
