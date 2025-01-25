@@ -1,12 +1,13 @@
 '''
 다양한 형식의 문서를 txt 파일로 변환하고 전처리
 '''
-import os, shutil, pickle
+import os, shutil, pickle, re
 
 hwp_ext = ['.hwp', '.hwpx']
 plain_ext = ['.txt', '.py']
+remove_chars = r"[□￭※①②③]"
 
-preprocess_list = ['', '<표>', '<그림>']
+preprocess_list = ['', '<표>', '<그림>', '□', '￭', '※', '①', '②', '③']
 
 class Converter():
     def __init__(self):
@@ -37,12 +38,21 @@ class Converter():
     def preprocess(self, filename):
         result = []
         with open(f"{self.targetdir}{filename}", 'r', encoding='utf-8') as f:
+            paragraph = ""
             for line in f:
-                line = line.strip()
-                # split_line = [part.strip() for part in line.split('.') if part.strip()]
-                # result.extend(split_line)
-                result.append(line)
-        result = [item for item in result if item not in preprocess_list]
+                for char in preprocess_list:
+                    line = line.replace(char, '')
+                if line == "\n" or line == " \n":
+                    if paragraph == "":
+                        continue
+                    else:
+                        paragraph = paragraph.strip()
+                        result.append(paragraph); paragraph = ""
+                else:
+                    line = line.lstrip()
+                    line = line.replace('\n', ' ')
+                    paragraph += line
+        print(result)
         with open(f"{self.targetdir}{filename[:-4]}.pkl", 'wb') as f:
             pickle.dump(result, f)
         return result

@@ -30,14 +30,14 @@ class Verification():
             if current_sim > max_sim:
                 max_sim = current_sim
                 max_idx = idx
-        if max_sim >= self.threshold:
-            print(f"[verification.py] {float(max_sim)} : {self.sentences[max_idx]}")
+        # if max_sim >= self.threshold:
+        print(f"[verification.py] {float(max_sim)} : {self.sentences[max_idx]}")
 
 # Debug
 if __name__ == '__main__':
     converter = Converter()
-    converter.convert("file2.txt")
-    verification = Verification("file2", 0.5)
+    converter.convert("file1.hwp")
+    verification = Verification("file1", 0.5)
     while True:
         query = input("[verification.py] input : ")
         if (query == "exit"): break
