@@ -36,6 +36,8 @@ class Converter():
         shutil.copy(self.inputdir + name + extension, self.targetdir + name + '.txt')
 
     def preprocess(self, filename):
+        window_size = 50
+
         result = []
         with open(f"{self.targetdir}{filename}", 'r', encoding='utf-8') as f:
             paragraph = ""
@@ -52,10 +54,15 @@ class Converter():
                     line = line.lstrip()
                     line = line.replace('\n', ' ')
                     paragraph += line
-        print(result)
+        
+        embedding_result = []
+        for paragraph in result:
+            for i in range(0, len(paragraph), window_size):
+                embedding_result.append(paragraph[i:i+window_size])
+        print(embedding_result)
         with open(f"{self.targetdir}{filename[:-4]}.pkl", 'wb') as f:
-            pickle.dump(result, f)
-        return result
+            pickle.dump(embedding_result, f)
+        return embedding_result
 
 # Debug
 if __name__ == '__main__':
